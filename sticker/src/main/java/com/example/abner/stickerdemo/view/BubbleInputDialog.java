@@ -14,7 +14,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.abner.stickerdemo.R;
+import com.example.abner.sticker.R;
 import com.example.abner.stickerdemo.utils.CommonUtils;
 
 /**

@@ -20,7 +20,7 @@ import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.widget.ImageView;
 
-import com.example.abner.stickerdemo.R;
+import com.example.abner.sticker.R;
 import com.example.abner.stickerdemo.model.BubblePropertyModel;
 import com.example.abner.stickerdemo.utils.DensityUtils;
 
