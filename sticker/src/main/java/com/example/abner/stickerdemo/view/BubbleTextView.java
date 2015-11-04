@@ -30,7 +30,7 @@ import com.example.abner.stickerdemo.utils.DensityUtils;
  * QQ 230877476
  * Email nimengbo@gmail.com
  */
-public class BubbleTextView extends ImageView {
+public class BubbleTextView extends ImageView implements Stickable {
 
     private static final String TAG = "BubbleTextView";
 
@@ -754,6 +754,17 @@ public class BubbleTextView extends ImageView {
         this.operationListener = operationListener;
     }
 
+    @Override
+    public void edit() {
+        setInEdit(true);
+    }
+
+    @Override
+    public void commit() {
+        setInEdit(false);
+    }
+
+    @Override
     public void setInEdit(boolean isInEdit) {
         this.isInEdit = isInEdit;
         invalidate();

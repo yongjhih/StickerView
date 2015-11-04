@@ -22,7 +22,7 @@ import com.example.abner.stickerdemo.model.StickerPropertyModel;
 /**
  * 表情贴纸
  */
-public class StickerView extends ImageView {
+public class StickerView extends ImageView implements Stickable {
     private static final String TAG = "StickerView";
 
     private Bitmap deleteBitmap;
@@ -604,6 +604,17 @@ public class StickerView extends ImageView {
         this.operationListener = operationListener;
     }
 
+    @Override
+    public void edit() {
+        setInEdit(true);
+    }
+
+    @Override
+    public void commit() {
+        setInEdit(false);
+    }
+
+    @Override
     public void setInEdit(boolean isInEdit) {
         this.isInEdit = isInEdit;
         invalidate();
