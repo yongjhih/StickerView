@@ -13,26 +13,12 @@ import android.view.View;
 import android.widget.RelativeLayout;
 
 import com.example.abner.stickerdemo.utils.FileUtils;
-import com.example.abner.stickerdemo.view.BubbleInputDialog;
-import com.example.abner.stickerdemo.view.BubbleTextView;
-import com.example.abner.stickerdemo.view.StickerView;
+import com.example.abner.stickerdemo.view.StickerManager;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
 
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
-
-    //气泡输入框
-    private BubbleInputDialog mBubbleInputDialog;
-
-    //当前处于编辑状态的贴纸
-    private StickerView mCurrentView;
-
-    //当前处于编辑状态的气泡
-    private BubbleTextView mCurrentEditTextView;
-
-    //存储贴纸列表
-    private ArrayList<View> mViews;
 
     private RelativeLayout mContentRootView;
 
@@ -42,11 +28,14 @@ public class MainActivity extends AppCompatActivity {
 
     private View mAddBubble;
 
+    private StickerManager mStickerManager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mContentRootView = (RelativeLayout) findViewById(R.id.rl_content_root);
+        mStickerManager = new StickerManager(mContentRootView);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -63,26 +52,17 @@ public class MainActivity extends AppCompatActivity {
         mAddSticker.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                addStickerView();
+                mStickerManager.addSticker();
                 mMultipleActions.collapse();
             }
         });
         mAddBubble.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                addBubble();
+                mStickerManager.addBubble();
                 mMultipleActions.collapse();
             }
         });
-        mViews = new ArrayList<>();
-        mBubbleInputDialog = new BubbleInputDialog(this);
-        mBubbleInputDialog.setCompleteCallBack(new BubbleInputDialog.CompleteCallBack() {
-            @Override
-            public void onComplete(View bubbleTextView, String str) {
-                ((BubbleTextView) bubbleTextView).setText(str);
-            }
-        });
-
     }
 
     @Override
@@ -101,121 +81,12 @@ public class MainActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_complete) {
-            mCurrentView.setInEdit(false);
+            mStickerManager.commit();
             generateBitmap();
             return true;
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    //添加表情
-    private void addStickerView() {
-        final StickerView stickerView = new StickerView(this);
-        stickerView.setImageResource(R.mipmap.ic_cat);
-        stickerView.setOperationListener(new StickerView.OperationListener() {
-            @Override
-            public void onDeleteClick() {
-                mViews.remove(stickerView);
-                mContentRootView.removeView(stickerView);
-            }
-
-            @Override
-            public void onEdit(StickerView stickerView) {
-                if (mCurrentEditTextView != null) {
-                    mCurrentEditTextView.setInEdit(false);
-                }
-                mCurrentView.setInEdit(false);
-                mCurrentView = stickerView;
-                mCurrentView.setInEdit(true);
-            }
-
-            @Override
-            public void onTop(StickerView stickerView) {
-                int position = mViews.indexOf(stickerView);
-                if (position == mViews.size() - 1) {
-                    return;
-                }
-                StickerView stickerTemp = (StickerView) mViews.remove(position);
-                mViews.add(mViews.size(), stickerTemp);
-            }
-        });
-        RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
-        mContentRootView.addView(stickerView, lp);
-        mViews.add(stickerView);
-        setCurrentEdit(stickerView);
-    }
-
-    //添加气泡
-    private void addBubble() {
-        final BubbleTextView bubbleTextView = new BubbleTextView(this,
-                Color.WHITE, 0);
-        bubbleTextView.setImageResource(R.mipmap.bubble_7_rb);
-        bubbleTextView.setOperationListener(new BubbleTextView.OperationListener() {
-            @Override
-            public void onDeleteClick() {
-                mViews.remove(bubbleTextView);
-                mContentRootView.removeView(bubbleTextView);
-            }
-
-            @Override
-            public void onEdit(BubbleTextView bubbleTextView) {
-                if (mCurrentView != null) {
-                    mCurrentView.setInEdit(false);
-                }
-                mCurrentEditTextView.setInEdit(false);
-                mCurrentEditTextView = bubbleTextView;
-                mCurrentEditTextView.setInEdit(true);
-            }
-
-            @Override
-            public void onClick(BubbleTextView bubbleTextView) {
-                mBubbleInputDialog.setBubbleTextView(bubbleTextView);
-                mBubbleInputDialog.show();
-            }
-
-            @Override
-            public void onTop(BubbleTextView bubbleTextView) {
-                int position = mViews.indexOf(bubbleTextView);
-                if (position == mViews.size() - 1) {
-                    return;
-                }
-                BubbleTextView textView = (BubbleTextView) mViews.remove(position);
-                mViews.add(mViews.size(), textView);
-            }
-        });
-        RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
-        mContentRootView.addView(bubbleTextView, lp);
-        mViews.add(bubbleTextView);
-        setCurrentEdit(bubbleTextView);
-    }
-
-    /**
-     * 设置当前处于编辑模式的贴纸
-     */
-    private void setCurrentEdit(StickerView stickerView) {
-        if (mCurrentView != null) {
-            mCurrentView.setInEdit(false);
-        }
-        if (mCurrentEditTextView != null) {
-            mCurrentEditTextView.setInEdit(false);
-        }
-        mCurrentView = stickerView;
-        stickerView.setInEdit(true);
-    }
-
-    /**
-     * 设置当前处于编辑模式的气泡
-     */
-    private void setCurrentEdit(BubbleTextView bubbleTextView) {
-        if (mCurrentView != null) {
-            mCurrentView.setInEdit(false);
-        }
-        if (mCurrentEditTextView != null) {
-            mCurrentEditTextView.setInEdit(false);
-        }
-        mCurrentEditTextView = bubbleTextView;
-        mCurrentEditTextView.setInEdit(true);
     }
 
     private void generateBitmap() {
