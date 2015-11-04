@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="action_complete">完成</string>
+    <string name="double_click_input_text">双击输入文字</string>
+    <string name="add_sticker">添加贴纸</string>
+    <string name="add_bubble">添加气泡</string>
+    <string name="complete">完成</string>
+    <string name="publish_comment">说点什么呗……</string>
+    <string name="over_text_limit">您已超过字数限制</string>
+</resources>
