@@ -85,6 +85,25 @@ public class StickerManager {
         edit(stickerView);
     }
 
+    public synchronized void clear() {
+        for (Stickable s : mStickables) {
+            parent.removeView((View) s);
+            mStickables.remove(s);
+        }
+    }
+
+    public synchronized void unhide() {
+        for (Stickable s : mStickables) {
+            ((View) s).setVisibility(View.VISIBLE);
+        }
+    }
+
+    public synchronized void hide() {
+        for (Stickable s : mStickables) {
+            ((View) s).setVisibility(View.GONE);
+        }
+    }
+
     public void addBubble() {
         addBubble(R.mipmap.bubble_7_rb);
     }
