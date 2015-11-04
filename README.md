@@ -14,8 +14,41 @@
 
 FloatingActionButton address : https://github.com/futuresimple/android-floating-action-button
 
-License
-=======
+## Usage
+
+```java
+// ...
+
+StickerManager mStickerManager = new StickerManager(parent);
+
+@OnClick(R.id.add_sticker)
+public void addSticker() {
+    mStickerManager.addSticker();
+}
+
+@OnClick(R.id.add_bubble)
+public void addBubble() {
+    mStickerManager.addBubble();
+}
+
+@OnClick(R.id.hide_stickers)
+public void hideStickers() {
+    mStickerManager.hide();
+}
+
+@OnClick(R.id.unhide_stickers)
+public void unhideStickers() {
+    mStickerManager.unhide();
+}
+
+@OnClick(R.id.clear_stickers)
+public void clearStickers() {
+    mStickerManager.clear();
+}
+```
+
+## License
+
 
     The MIT License (MIT)
 
